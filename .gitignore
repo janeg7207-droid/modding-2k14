@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+source_library/*
+!source_library/library.json
+!source_library/jeff_hardy_26_a0-7530a41819912031460be42c9f675539ebd1f4a862297e08b33c26a6b3907bc5.rar

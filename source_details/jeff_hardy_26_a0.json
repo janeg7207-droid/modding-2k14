@@ -1,0 +1,529 @@
+{
+  "source": "jeff_hardy_26_A0.rar",
+  "source_sha256": "7530a41819912031460be42c9f675539ebd1f4a862297e08b33c26a6b3907bc5",
+  "status": "Source archive integrity checked and inventoried. Not converted; not tested in WWE 2K14.",
+  "file_count": 58,
+  "total_bytes": 97489154,
+  "files": [
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/104_Attire.mcd",
+      "bytes": 15937192,
+      "sha256": "433dd352824f81bd80397e88759321288469bb386e92d0ad15adb628169e1078",
+      "assessment": "2K26 model data: requires format-specific import, retargeting and 2K14 rebuild"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/104_Attire.mtls",
+      "bytes": 652,
+      "sha256": "97ebf04c54aebbd3b0cdefe155ce4d3b12701fd49df5e7063e7632a7e08940af",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/104_Attire.ycl",
+      "bytes": 1473088,
+      "sha256": "aa64011f5ab57374ad45f49081858ee0ba00b986b4aec82e8dd524738a109525",
+      "assessment": "2K26 auxiliary data: purpose and 2K14 equivalent require investigation"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/belt.jmtl",
+      "bytes": 200,
+      "sha256": "f84d7cb7ec8eced0484ac8c84caaeda371c53cfca5b3ac289ea8c75eb716b926",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/bottoms.jmtl",
+      "bytes": 200,
+      "sha256": "9e3f9837aa09235330676f147fdc63ce8d37e7a1948b1310e35549dd9429ccea",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/goatee.jmtl",
+      "bytes": 272,
+      "sha256": "bf5c9a3920d5b27b19aa24d5b5f68479a85327f1db73769e602ba1b8be34f7fc",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/hair_ALPHA.jmtl",
+      "bytes": 184,
+      "sha256": "0f0af6d5823c6ae696ece60e834678d44e85b77cfa7d426a30df24a79f91cf43",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/jacket.jmtl",
+      "bytes": 200,
+      "sha256": "4ae79f84b6a8e6dc7ea674d90a1fe4be9dd416be30bea0cde67c3f9b4d5d52f5",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/l_a_acce.jmtl",
+      "bytes": 200,
+      "sha256": "5fe8f59401896ca2a76d813432aa708089b4c3636fbeec5fe1b375a4db504512",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/l_a_acce2extra.jmtl",
+      "bytes": 200,
+      "sha256": "cac3e1e7c9f9cc6f016888a290299a8e259a680ed41018ce6e9e6cd8cd525b2c",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/pierce.jmtl",
+      "bytes": 200,
+      "sha256": "0c96f6c429ad7360042added02c431bedb426daee64efca2fd4af88df8eaf716",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/r_a_acce.jmtl",
+      "bytes": 200,
+      "sha256": "975cc0cfbbcb44f113375d12400de13da02be653cc7bb6617f387e1f8f5f04be",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/shoes.jmtl",
+      "bytes": 200,
+      "sha256": "f9936a83d93fd1d404154ec10d668138cc493e8dc5bec8cf1b164a94e0a93ae8",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Materials/tops.jmtl",
+      "bytes": 200,
+      "sha256": "b8fe37b4b12ef987f390ee10a64e89cc39484463b6820be3bbc577746ab9cf5b",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/belt_color.dds",
+      "bytes": 174904,
+      "sha256": "45f3b5db6e46a29c096e88b9e4453092291b226c2f6061eaddaec1afd2b0537d",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 512\u00d7512, DXT1",
+      "texture": {
+        "width": 512,
+        "height": 512,
+        "fourcc": "DXT1"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/belt_nrm.dds",
+      "bytes": 349700,
+      "sha256": "6577098ca8f9c3bd233d62894d1ade9ddc61566e9ec4ab09f1a843594da8b7dc",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 512\u00d7512, DX10",
+      "texture": {
+        "width": 512,
+        "height": 512,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/bottoms_color.DDS",
+      "bytes": 1398256,
+      "sha256": "5d1d691cd43674f5147325c30ce1a6a883154c3e0839b542a4afafbba5e65f47",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DXT5",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/bottoms_nrm.DDS",
+      "bytes": 1398276,
+      "sha256": "b6ae7fa28f34b0e718e8df33d04caa7a4a51a826dbb74a7192df0fa2ce3df9c5",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DX10",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/goatee_flow.dds",
+      "bytes": 349680,
+      "sha256": "148d938fb4780713fcd9d8a49536a0f446370bf301ac9703a344472dc487323c",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 512\u00d7512, ATI2",
+      "texture": {
+        "width": 512,
+        "height": 512,
+        "fourcc": "ATI2"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/goatee_rai.dds",
+      "bytes": 174904,
+      "sha256": "d2c985d0b30ce1c754a16a920169d0202066ee1923d19b4298846ecf7d464644",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 512\u00d7512, DXT1",
+      "texture": {
+        "width": 512,
+        "height": 512,
+        "fourcc": "DXT1"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/gude-2026-10-15.log",
+      "bytes": 273,
+      "sha256": "a315090f08dd0412f5d855c8d9499789d058cea14daf88326a0a065f35129b4a",
+      "assessment": "Unknown compatibility: manual investigation required"
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/hair_flow.dds",
+      "bytes": 5592560,
+      "sha256": "675f3a68de2d16a6fa852d3a0cac606b7717be0b6ba858ac94cc9b8a5c526202",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 2048\u00d72048, ATI2",
+      "texture": {
+        "width": 2048,
+        "height": 2048,
+        "fourcc": "ATI2"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/hair_rai.dds",
+      "bytes": 2796344,
+      "sha256": "196829e07d2a1af245644fb1475235e16b26583f3f9298bef0d4893fed1e471c",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 2048\u00d72048, DXT1",
+      "texture": {
+        "width": 2048,
+        "height": 2048,
+        "fourcc": "DXT1"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/jacket_color.dds",
+      "bytes": 2796368,
+      "sha256": "e71256b29facdccde3cdf2b2d698df4df754b8be7f0daaa29b54dcebe91be761",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d72048, DXT5",
+      "texture": {
+        "width": 1024,
+        "height": 2048,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/jacket_nrm.dds",
+      "bytes": 2796388,
+      "sha256": "c73baf512c2e35914349f792a140a24e7ebd16195b02bc874657146a0aafacc8",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d72048, DX10",
+      "texture": {
+        "width": 1024,
+        "height": 2048,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/l_a_acce2extra_color.dds",
+      "bytes": 87536,
+      "sha256": "c53f663a6b37cad6dc0310e15d02ef8ed4fc8d56f7fdbe140bda038f958b9975",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 256\u00d7256, DXT5",
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/l_a_acce2extra_nrm.dds",
+      "bytes": 87556,
+      "sha256": "6cf27723f434b1e5a953e213ac94f76935be0afa31586598c6df0f039151e8fd",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 256\u00d7256, DX10",
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/l_a_acce_color.dds",
+      "bytes": 524416,
+      "sha256": "0c524e79be912beec17cf62edba9bc0ab190773293863d4760c8c469a0abc526",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DXT1",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DXT1"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/l_a_acce_nrm.dds",
+      "bytes": 1398276,
+      "sha256": "e1be86273881cfe3cc1976ef5b418ec4ebd26c1563c04c6bc07ad9dbf4d3b7c2",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DX10",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/pierce_color.dds",
+      "bytes": 87536,
+      "sha256": "5d1c5fbe316bca50c628165c9f05b5b98c85a1964221258e47d7b06efd566508",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 256\u00d7256, DXT5",
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/pierce_nrm.dds",
+      "bytes": 87556,
+      "sha256": "3003f749cbeef10cce54809b525d286cd06552409c7849541c78db863eed29a7",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 256\u00d7256, DX10",
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/r_a_acce_color.dds",
+      "bytes": 524416,
+      "sha256": "00d20d4c340cc2d8156739cf336d6455cdd916e73acb5b435d34a50395e87cb7",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DXT1",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DXT1"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/r_a_acce_nrm.dds",
+      "bytes": 1398276,
+      "sha256": "7a2c3f2483eb0bf449825f158f393bdf0e5a639d1ef049c152d36df3ec30ca68",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DX10",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/shoes_color.dds",
+      "bytes": 5592560,
+      "sha256": "2f014ddc2c0bf2f6d4f9b9282de9daccf6e75390d63898fcc5c655499dd68417",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 2048\u00d72048, DXT5",
+      "texture": {
+        "width": 2048,
+        "height": 2048,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/shoes_nrm.DDS",
+      "bytes": 5592580,
+      "sha256": "128068f37bf3d9505f6c3773a429970331223a9c0a698bb4f03385adea118658",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 2048\u00d72048, DX10",
+      "texture": {
+        "width": 2048,
+        "height": 2048,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/tops_color.dds",
+      "bytes": 5592560,
+      "sha256": "cbc782a1058d220415da7b56eaa16e2ff0cce8fa234c08cbf3250613bb9d8905",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 2048\u00d72048, DXT5",
+      "texture": {
+        "width": 2048,
+        "height": 2048,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/104_Alt_Attire/Textures/tops_nrm.dds",
+      "bytes": 5592560,
+      "sha256": "804c0f58dbaf92df53d4031138a54d6326cc159ca0dbda0c36c3ea97a7cf1dbd",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 2048\u00d72048, DXT5",
+      "texture": {
+        "width": 2048,
+        "height": 2048,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/baseModel.mcd",
+      "bytes": 6974176,
+      "sha256": "8eab08c0b64a664468d4be704b1286ad743c480e0be6f2be78aec6d7f9cef646",
+      "assessment": "2K26 model data: requires format-specific import, retargeting and 2K14 rebuild"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/baseModel.mtls",
+      "bytes": 444,
+      "sha256": "1cbe514da789bd3e1f6fd338b9f1e6329437218614dd898091a49a8e8aef41a1",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/body.jmtl",
+      "bytes": 160,
+      "sha256": "391d5b7570b8ad488bac54a3eb27354a04e0d57c2a2a2fa63607701524349775",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/eyelash.jmtl",
+      "bytes": 56,
+      "sha256": "eaf05f55af72805752d7bcad3e8a8af763fe3e5f0165db96bdd9fcaae71d6ea5",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/eye_caruncle.jmtl",
+      "bytes": 128,
+      "sha256": "c21fbd92206ffee48fa76dc144ea76c9f78277016d596f11855be43dc9c30ef3",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/eye_l.jmtl",
+      "bytes": 64,
+      "sha256": "e70103e064a305153e9e63b890276e5858264eadbfb553843555d8212f712d9a",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/eye_r.jmtl",
+      "bytes": 64,
+      "sha256": "e70103e064a305153e9e63b890276e5858264eadbfb553843555d8212f712d9a",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/head.jmtl",
+      "bytes": 184,
+      "sha256": "02939605d0af5e157373c642f79ff35c367d35656676d058903b162f75551c6e",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/mouthbag.jmtl",
+      "bytes": 160,
+      "sha256": "bef4d67936b5e6eb21d87a31bff5f7e4207e5a7045eccdaca7215ba929bf502c",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Materials/teeth.jmtl",
+      "bytes": 160,
+      "sha256": "bef4d67936b5e6eb21d87a31bff5f7e4207e5a7045eccdaca7215ba929bf502c",
+      "assessment": "2K26 material data: recreate for target 2K14 materials"
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/body_color.dds",
+      "bytes": 11184976,
+      "sha256": "7451ff0a4b80cb4048588fc199769b34e8e0863690ab7e6d5fec675d5279d5b6",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 4096\u00d72048, DXT5",
+      "texture": {
+        "width": 4096,
+        "height": 2048,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/body_nrm.dds",
+      "bytes": 11184996,
+      "sha256": "89e25ffd834b297ddf63d858af747716c55c257e5f524ccf712dd2ca4c0948c4",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 4096\u00d72048, DX10",
+      "texture": {
+        "width": 4096,
+        "height": 2048,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/eyelash_color.dds",
+      "bytes": 174928,
+      "sha256": "348733fe57a043f3da1ee7b84169326d91d5fc54bc572f471e2b5da08c8d423a",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 512\u00d7256, DXT5",
+      "texture": {
+        "width": 512,
+        "height": 256,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/eyelash_nrm.dds",
+      "bytes": 131200,
+      "sha256": "b529b7d74552bedb38cbc1c558157535a519f449671d5cce165172f93eebb438",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 512\u00d7256, DXT5",
+      "texture": {
+        "width": 512,
+        "height": 256,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/eye_color.dds",
+      "bytes": 349680,
+      "sha256": "0291a4cff019c91dccb3d22e5018d007e61c85b2641127d6d811c8435bc552bb",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 512\u00d7512, DXT5",
+      "texture": {
+        "width": 512,
+        "height": 512,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/eye_nrm.dds",
+      "bytes": 87556,
+      "sha256": "ae4df17606d4f573ce9baeb3fec3b35055a0247e95d8297f4dd4756b22c34726",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 256\u00d7256, DX10",
+      "texture": {
+        "width": 256,
+        "height": 256,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/facepaint_color.dds",
+      "bytes": 1398256,
+      "sha256": "8ef912247bbde6b9235d467ada5712c93006f81b7192cc31a2ed58010b481a98",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DXT5",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/facepaint_nrm.dds",
+      "bytes": 1398276,
+      "sha256": "cf3347258018c201744b4a5cce0cf467f06738c6c362189a1c6c04de53bca3f3",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DX10",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/head_color.dds",
+      "bytes": 1398256,
+      "sha256": "e51622e60e0a86659590970226b2770aa2d8b696ac2ed0a75ca3a74e06c012d6",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DXT5",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DXT5"
+      }
+    },
+    {
+      "path": "jeff_hardy_26_A0/BaseModel/Textures/head_nrm.dds",
+      "bytes": 1398276,
+      "sha256": "cf3347258018c201744b4a5cce0cf467f06738c6c362189a1c6c04de53bca3f3",
+      "assessment": "Texture candidate: adapt to target texture format and import into a 2K14 PAC; 1024\u00d71024, DX10",
+      "texture": {
+        "width": 1024,
+        "height": 1024,
+        "fourcc": "DX10",
+        "dxgi_format": 98
+      }
+    },
+    {
+      "path": "READ ME.txt",
+      "bytes": 489,
+      "sha256": "ff570f019fed06ece368aa501b1a151432c9c0626d9a7978630118bdbdf8f93b",
+      "assessment": "Unknown compatibility: manual investigation required"
+    }
+  ]
+}
