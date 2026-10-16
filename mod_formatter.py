@@ -3,6 +3,8 @@ from pathlib import Path, PurePosixPath
 import argparse
 import json
 import zipfile
+import hashlib
+from datetime import datetime, timezone
 from source_library import SourceLibrary
 
 BLOCKED = {'.cak', '.gorillamod', '.rar', '.7z', '.zip', '.exe', '.dll', '.ps1', '.bat', '.py'}
@@ -102,16 +104,70 @@ def package(game_root, assets, output, confirmed=False):
         raise ValueError('Output must end in .zip')
     if output.is_relative_to(Path(game_root).resolve()):
         raise ValueError('Save outside your original game folder')
+    report_path = output.with_suffix('.test.json')
+    if report_path.exists():
+        raise FileExistsError(f'Test report already exists: {report_path.name}; choose a new export name')
+    expected = {}
+    for source, target in checked:
+        digest = hashlib.sha256()
+        with source.open('rb') as stream:
+            while chunk := stream.read(1024 * 1024):
+                digest.update(chunk)
+        expected[target] = digest.hexdigest()
+    report_created = False
     # Exclusive creation preserves existing packages and original game data.
-    with output.open('xb') as stream:
+    with output.open('x+b') as stream:
         try:
             with zipfile.ZipFile(stream, 'w', zipfile.ZIP_DEFLATED) as archive:
                 for source, target in checked:
                     archive.write(source, target)
+            stream.flush()
+            stream.seek(0)
+            exported = []
+            with zipfile.ZipFile(stream, 'r') as archive:
+                if archive.namelist() != [target for _, target in checked]:
+                    raise ValueError('Exported archive paths do not match selected assets')
+                for source, target in checked:
+                    digest = hashlib.sha256()
+                    with archive.open(target) as asset:
+                        while chunk := asset.read(1024 * 1024):
+                            digest.update(chunk)
+                    if digest.hexdigest() != expected[target]:
+                        raise ValueError(f'Exported bytes differ from selected asset: {target}')
+                    exported.append(dict(target=target, source_filename=source.name,
+                                         bytes=archive.getinfo(target).file_size,
+                                         sha256=digest.hexdigest(), readback='passed'))
+            stream.seek(0)
+            digest = hashlib.sha256()
+            while chunk := stream.read(1024 * 1024):
+                digest.update(chunk)
+            report = dict(
+                schema_version=1,
+                generated_at=datetime.now(timezone.utc).isoformat(),
+                tool='WWE 2K14 Mod Formatter',
+                package=dict(filename=output.name, sha256=digest.hexdigest(), file_count=len(exported)),
+                conversion=dict(status='user_declared', verified_by_tool=False),
+                packaging=dict(status='passed', checks={
+                    'original_targets_exist': 'passed', 'matching_extensions': 'passed',
+                    'unique_safe_paths': 'passed', 'archive_readback_crc_and_sha256': 'passed'}),
+                binary_compatibility=dict(status='not_tested'),
+                in_game=dict(status='not_tested', checks={
+                    name: 'not_tested' for name in ['launcher_import', 'wrestler_select', 'entrance',
+                                                   'attire_and_textures', 'match_gameplay', 'victory']},
+                    notes='Test the port in WWE 2K14 and record observations here. Packaging does not validate a port.'),
+                files=exported,
+            )
+            with report_path.open('x', encoding='utf-8') as report_stream:
+                report_created = True
+                json.dump(report, report_stream, indent=2)
+                report_stream.write('\n')
         except Exception:
             stream.close()
             output.unlink()
+            if report_created:
+                report_path.unlink(missing_ok=True)
             raise
+    return report_path
 
 
 def gui():
@@ -280,13 +336,14 @@ def gui():
         name = fd.asksaveasfilename(defaultextension='.zip', initialfile='My_2K14_Attire.zip')
         if name:
             try:
-                package(root.get(), assets, name, confirmed.get())
+                test_report = package(root.get(), assets, name, confirmed.get())
                 mb.showinfo('Package created', "Import the ZIP in the 2K14 launcher's Mods tab. Test one mod at a time.\n"
-                            'In-game compatibility has not been verified.')
+                            f'Test JSON saved: {test_report.name}\n'
+                            'Packaging passed. Binary compatibility and in-game behavior are not tested.')
             except Exception as ex:
                 mb.showerror('Export failed', str(ex))
 
-    ttk.Button(frame, text='4. Export launcher mod ZIP', command=export).pack(anchor='w')
+    ttk.Button(frame, text='4. Export mod ZIP + test JSON', command=export).pack(anchor='w')
     app.mainloop()
 
 
@@ -316,8 +373,8 @@ def main():
                 if not sep:
                     raise ValueError('Use --asset converted-file=original/game/path')
                 assets.append((source, target))
-            package(args.game_root, assets, args.output, args.confirm_2k14)
-            print('Created package. Test asset compatibility in game.')
+            test_report = package(args.game_root, assets, args.output, args.confirm_2k14)
+            print(f'Created package and {test_report.name}. Packaging passed; in-game compatibility is not tested.')
         else:
             gui()
     except Exception as ex:

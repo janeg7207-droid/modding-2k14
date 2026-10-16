@@ -26,7 +26,7 @@ Generic RAR/7z attachments cannot be inspected by the standalone tool; the Jeff 
 2. Extract the source with a tool supporting that exact 2K26 format. For attire textures, adapt to the original 2K14 texture dimensions, layout and encoding. For models, adapt geometry, skeleton, skin weights and materials to the target 2K14 wrestler. Import/rebuild using tools confirmed to support 2K14 Xbox 360 PACs. **These manual conversion steps require separate asset tools and are not supplied here.**
 3. Choose your extracted Xbox 360 2K14 game folder containing `pac`. It is read only. ISO players still need an extracted reference to select exact original targets.
 4. Add your converted asset; select the ORIGINAL 2K14 file it replaces. Matching extensions are required but do not prove compatibility. Use the actual target filename; don't guess wrestler IDs.
-5. Confirm the assets were rebuilt for 2K14 and export a new ZIP outside the original game folder.
+5. Confirm the assets were rebuilt for 2K14 and export a new ZIP outside the original game folder. A matching `.test.json` is saved beside it automatically.
 6. Close the game, import the ZIP in the launcher's Mods tab, enable it, and test the wrestler in a match. Disable other mods that replace the same file. Back up saves first.
 
 Output layout:
@@ -39,6 +39,14 @@ My_Attire_Mod.zip
 ```
 
 Only original paths under `pac/`, `movies/`, and `sound/` are supported. This tool handles replacements, not new roster slots. It does not modify original game files or launcher manifests, start the game, or modify Gorilla. No automatic conflict scan, conversion or rollback is included. Existing output packages are not overwritten.
+
+## Test JSON after export
+
+Exporting `My_Attire_Mod.zip` also creates `My_Attire_Mod.test.json` **beside** the ZIP. It stays outside the mod archive so the launcher cannot mistake it for a game asset. Both GUI and CLI generate it automatically. Choose a new export name if either file already exists; existing results are preserved.
+
+The JSON records the export timestamp, package and asset SHA-256 hashes, file sizes, original target paths, and packaging checks. Every archive entry is read back to check CRC integrity and compare its SHA-256 with the selected asset. A failed export does not leave a passing test report.
+
+`conversion.status` is `user_declared`; the tool has not verified the binary conversion. `binary_compatibility.status` and `in_game.status` start as `not_tested`. After testing in 2K14, you can edit the in-game checklist and notes to record actual results (`passed`, `failed`, or `not_tested`) for launcher import, wrestler selection, entrance, attire/textures, match gameplay, and victory. Do not treat a packaging pass as proof that the port works.
 
 ## CLI
 

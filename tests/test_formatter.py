@@ -1,6 +1,9 @@
 import tempfile
 import unittest
 import zipfile
+import hashlib
+import json
+from unittest.mock import patch
 from pathlib import Path
 from mod_formatter import analyze, package
 
@@ -57,6 +60,43 @@ class FormatterTests(unittest.TestCase):
         with self.assertRaises(FileExistsError):
             self.pack()
         self.assertEqual(self.output.read_bytes(), b'existing package')
+
+    def test_test_json_matches_export_without_claiming_game_compatibility(self):
+        self.pack()
+        report = json.loads(self.output.with_suffix('.test.json').read_text())
+        self.assertEqual(report['package']['sha256'], hashlib.sha256(self.output.read_bytes()).hexdigest())
+        self.assertEqual(report['files'][0]['sha256'], hashlib.sha256(self.converted.read_bytes()).hexdigest())
+        self.assertEqual(report['files'][0]['target'], 'pac/ch/ch123.pac')
+        self.assertEqual(report['packaging']['status'], 'passed')
+        self.assertEqual(report['conversion']['status'], 'user_declared')
+        self.assertFalse(report['conversion']['verified_by_tool'])
+        self.assertEqual(report['binary_compatibility']['status'], 'not_tested')
+        self.assertEqual(report['in_game']['status'], 'not_tested')
+        self.assertTrue(all(v == 'not_tested' for v in report['in_game']['checks'].values()))
+        with zipfile.ZipFile(self.output) as archive:
+            self.assertFalse(any(name.endswith('.json') for name in archive.namelist()))
+
+    def test_preserve_existing_test_json(self):
+        report = self.output.with_suffix('.test.json')
+        report.write_text('existing test results')
+        with self.assertRaises(FileExistsError):
+            self.pack()
+        self.assertEqual(report.read_text(), 'existing test results')
+        self.assertFalse(self.output.exists())
+
+    def test_export_failure_does_not_leave_success_report(self):
+        with patch('mod_formatter.zipfile.ZipFile.write', side_effect=OSError('Disk error')):
+            with self.assertRaises(OSError):
+                self.pack()
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.output.with_suffix('.test.json').exists())
+
+    def test_failed_report_write_removes_partial_export(self):
+        with patch('mod_formatter.json.dump', side_effect=OSError('Disk error')):
+            with self.assertRaises(OSError):
+                self.pack()
+        self.assertFalse(self.output.exists())
+        self.assertFalse(self.output.with_suffix('.test.json').exists())
 
     def test_reject_game_output(self):
         with self.assertRaises(ValueError):
