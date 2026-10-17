@@ -10,15 +10,21 @@ Windows-friendly source analysis and ZIP packaging for the Banshee WWE 2K14 PC l
 2. Install Python 3.10 or newer from https://www.python.org/downloads/windows/ with Tcl/Tk and the Python launcher (included in the normal installer).
 3. Double-click **Launch Formatter.bat**. Alternatively, open PowerShell in that folder and run `py -3 mod_formatter.py`.
 
+## Simplified desktop UI
+
+Click **Choose 2K26 file**. The app checks it automatically in the background, without freezing the window. **Choose folder** handles already extracted source files. **Jeff Hardy 26 A0** opens the included source in one click. The dark interface keeps file details and converted-asset setup out of the main selection flow and scrolls on smaller screens.
+
+Source inspection is automatic; binary conversion is not implemented. The source status shows **Conversion required**. To package assets you have already rebuilt, expand **I have converted assets**, choose the extracted 2K14 reference folder, add replacements against original target files, and confirm their format. **Export 2K14 ZIP + test JSON** then becomes available. It remains disabled for an unconverted 2K26 source.
+
 ## Included source library: Jeff Hardy 26 A0
 
 The updated download includes the **actual Jeff Hardy 26 A0 source RAR**, recovered from the two uploaded 7z volumes, plus an inspected inventory. It is already attached in the UI's source library. Custom models and textures are credited to **JeffIsMyName2K** in the supplied archive; its original README is preserved inside the RAR.
 
-Select **Jeff Hardy 26 A0** and click **Analyze attached source** to see its 58 files, including model/material data and DDS textures with dimensions and format identifiers. The supplied archive was fully decompressed to check entry sizes and integrity. Its contents have not been converted or tested in 2K14. The inventory is used only when the attached archive's SHA-256 matches the inspected source.
+Click **Jeff Hardy 26 A0**, then **File details** to see its 58 files, including model/material data and DDS textures with dimensions and format identifiers. The supplied archive was fully decompressed to check entry sizes and integrity. Its contents have not been converted or tested in 2K14. The inventory is used only when the source archive's SHA-256 matches the inspected source.
 
-**Attach archive (keep local copy)** lets you replace the current source reference with a local RAR, 7z, ZIP, CAK or Gorilla archive. Streamed copies and SHA-256 records are kept in `source_library/` beside the formatter and survive restarts. Identical copies are reused; changed versions are retained separately. Keep the entire formatter folder when backing it up. The supplied Jeff Hardy archive and initial library index are included in this repository; additional local source archives are ignored by Git.
+**Choose 2K26 file** selects any local RAR, 7z, ZIP, CAK, Gorilla archive, or source asset without replacing the included Jeff Hardy source. Selected files are read in place. The included archive and its SHA-256 record are kept in `source_library/`; keep the entire formatter folder when backing it up. The supplied Jeff Hardy archive and initial library index are included in this repository; additional local library files are ignored by Git.
 
-Generic RAR/7z attachments cannot be inspected by the standalone tool; the Jeff Hardy inventory is included from this setup's inspection. Extract with 7-Zip on your PC and use **Analyze folder** for other sources. Source archives never enter exported 2K14 ZIPs. The library labels sources as unconverted; only converted assets you add separately can be packaged.
+Generic RAR/7z files cannot be inspected by the standalone tool; the Jeff Hardy inventory is included from this setup's inspection. Extract with 7-Zip on your PC and use **Choose folder** for other sources. Source archives never enter exported 2K14 ZIPs. Sources remain unconverted; only converted assets you add separately can be packaged.
 
 ## Wrestler / attire workflow
 
@@ -55,7 +61,7 @@ py -3 mod_formatter.py analyze "C:\Downloads\My2K26Mod.zip" --report report.json
 py -3 mod_formatter.py pack --game-root "C:\Games\WWE2K14-Extracted" --asset "C:\Converted\chXXX.pac=pac/ch/chXXX.pac" --output "C:\Mods\My_Attire_Mod.zip" --confirm-2k14
 ```
 
-Replace example paths with actual ones. Input analysis is heuristic. Limits: 20,000 input files or 2 GiB declared uncompressed input; 2 GiB output assets. GUI requires Tk and a desktop; Windows GUI and in-game behavior have not been validated in this cloud machine.
+Replace example paths with actual ones. Input analysis is heuristic. Limits: 20,000 input files or 2 GiB declared uncompressed input; 2 GiB output assets. GUI requires Tk and a desktop. The desktop file picker, source status, converted-asset export and JSON flow were exercised with real Tk on a virtual Linux display, using synthetic PAC fixtures for export. Windows GUI and in-game behavior have not been validated.
 
 ## Development checks
 
