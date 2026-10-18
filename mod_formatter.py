@@ -6,6 +6,7 @@ import zipfile
 import hashlib
 from datetime import datetime, timezone
 from source_library import SourceLibrary
+from game_support import game_layout, PLATFORM_NAMES, launch_ps3
 
 BLOCKED = {'.cak', '.gorillamod', '.rar', '.7z', '.zip', '.exe', '.dll', '.ps1', '.bat', '.py'}
 LIMIT = 2 * 1024**3
@@ -69,11 +70,12 @@ def analyze(source):
                 file_count=len(records), total_bytes=total, files=records)
 
 
-def validate(game_root, replacement, target):
-    root = Path(game_root).resolve(strict=True)
+def validate(game_root, replacement, target, platform='xbox360'):
+    root = game_layout(game_root, platform).asset_root
     relative = safe_path(target)
-    if relative.parts[0].lower() not in {'pac', 'movies', 'sound'}:
-        raise ValueError('Target must be under pac/, movies/ or sound/')
+    catalog = platform == 'ps3' and len(relative.parts) == 1 and relative.suffix.lower() in {'.arc', '.def'}
+    if relative.parts[0].lower() not in {'pac', 'movies', 'sound'} and not catalog:
+        raise ValueError('Target must be under pac/, movies/ or sound/ (PS3 also accepts original .arc/.def catalogs)')
     original = root.joinpath(*relative.parts).resolve(strict=True)
     if not original.is_relative_to(root) or not original.is_file():
         raise ValueError('Target must be an original file within the selected 2K14 folder')
@@ -90,10 +92,13 @@ def validate(game_root, replacement, target):
     return replacement, relative.as_posix()
 
 
-def package(game_root, assets, output, confirmed=False):
+def package(game_root, assets, output, confirmed=False, platform='xbox360'):
+    if platform not in PLATFORM_NAMES:
+        raise ValueError('Choose xbox360 or ps3 as the export platform')
     if not confirmed or not assets:
-        raise ValueError('Add assets and confirm they were rebuilt for WWE 2K14 Xbox 360')
-    checked = [validate(game_root, source, target) for source, target in assets]
+        raise ValueError(f'Add assets and confirm they were rebuilt for WWE 2K14 {PLATFORM_NAMES[platform]}')
+    layout = game_layout(game_root, platform)
+    checked = [validate(game_root, source, target, platform) for source, target in assets]
     names = [target.casefold() for _, target in checked]
     if len(names) != len(set(names)):
         raise ValueError('Multiple replacements target the same game file')
@@ -102,7 +107,7 @@ def package(game_root, assets, output, confirmed=False):
     output = Path(output).resolve()
     if output.suffix.lower() != '.zip':
         raise ValueError('Output must end in .zip')
-    if output.is_relative_to(Path(game_root).resolve()):
+    if output.is_relative_to(layout.game_root):
         raise ValueError('Save outside your original game folder')
     report_path = output.with_suffix('.test.json')
     if report_path.exists():
@@ -142,9 +147,14 @@ def package(game_root, assets, output, confirmed=False):
             while chunk := stream.read(1024 * 1024):
                 digest.update(chunk)
             report = dict(
-                schema_version=1,
+                schema_version=2,
                 generated_at=datetime.now(timezone.utc).isoformat(),
                 tool='WWE 2K14 Mod Formatter',
+                target_platform=platform,
+                runtime='RPCS3 (external)' if platform == 'ps3' else 'WWE 2K14 PC recompilation',
+                installation=dict(relative_to='PS3_GAME/USRDIR' if platform == 'ps3' else 'game root',
+                    instructions=('Extract the ZIP into USRDIR of a separate PS3 test copy. Rebuilt assets and catalogs must be PS3-compatible. Boot that copy with RPCS3.'
+                                  if platform == 'ps3' else "Import the ZIP in the PC launcher's Mods tab.")),
                 package=dict(filename=output.name, sha256=digest.hexdigest(), file_count=len(exported)),
                 conversion=dict(status='user_declared', verified_by_tool=False),
                 packaging=dict(status='passed', checks={
@@ -152,8 +162,9 @@ def package(game_root, assets, output, confirmed=False):
                     'unique_safe_paths': 'passed', 'archive_readback_crc_and_sha256': 'passed'}),
                 binary_compatibility=dict(status='not_tested'),
                 in_game=dict(status='not_tested', checks={
-                    name: 'not_tested' for name in ['launcher_import', 'wrestler_select', 'entrance',
-                                                   'attire_and_textures', 'match_gameplay', 'victory']},
+                    name: 'not_tested' for name in (
+                        (['ps3_test_copy_prepared', 'rpcs3_boot'] if platform == 'ps3' else ['launcher_import'])
+                        + ['wrestler_select', 'entrance', 'attire_and_textures', 'match_gameplay', 'victory'])},
                     notes='Test the port in WWE 2K14 and record observations here. Packaging does not validate a port.'),
                 files=exported,
             )
@@ -170,13 +181,14 @@ def package(game_root, assets, output, confirmed=False):
     return report_path
 
 
-def gui():
+def gui(platform='xbox360'):
     from modern_ui import launch
-    launch(analyze, package, validate)
+    launch(analyze, package, validate, initial_platform=platform)
 
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--ps3', action='store_true', help='Open the desktop UI in PS3 / RPCS3 mode')
     sub = parser.add_subparsers(dest='command')
     scan = sub.add_parser('analyze')
     scan.add_argument('source', type=Path)
@@ -186,6 +198,10 @@ def main():
     pack.add_argument('--asset', action='append', required=True, metavar='CONVERTED_FILE=GAME_PATH')
     pack.add_argument('--output', type=Path, required=True)
     pack.add_argument('--confirm-2k14', action='store_true')
+    pack.add_argument('--platform', choices=['xbox360', 'ps3'], default='xbox360')
+    play = sub.add_parser('play-ps3', help='Boot an extracted PS3 game using your installed RPCS3')
+    play.add_argument('--game-root', type=Path, required=True)
+    play.add_argument('--rpcs3', type=Path, required=True)
     args = parser.parse_args()
     try:
         if args.command == 'analyze':
@@ -201,10 +217,13 @@ def main():
                 if not sep:
                     raise ValueError('Use --asset converted-file=original/game/path')
                 assets.append((source, target))
-            test_report = package(args.game_root, assets, args.output, args.confirm_2k14)
+            test_report = package(args.game_root, assets, args.output, args.confirm_2k14, args.platform)
             print(f'Created package and {test_report.name}. Packaging passed; in-game compatibility is not tested.')
+        elif args.command == 'play-ps3':
+            process = launch_ps3(args.game_root, args.rpcs3)
+            print(f'RPCS3 process started (PID {process.pid}). Game boot and gameplay have not been verified.')
         else:
-            gui()
+            gui('ps3' if args.ps3 else 'xbox360')
     except Exception as ex:
         parser.exit(1, f'Error: {ex}\n')
 

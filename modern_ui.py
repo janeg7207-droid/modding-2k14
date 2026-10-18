@@ -6,6 +6,7 @@ from queue import Queue, Empty
 from threading import Thread
 
 from source_library import SourceLibrary
+from game_support import game_layout, PLATFORM_NAMES, launch_ps3
 
 BG = '#0c1018'
 CARD = '#151c28'
@@ -54,7 +55,7 @@ def inspect_source(source, library, analyze):
     return analyze(source)
 
 
-def launch(analyze, package, validate):
+def launch(analyze, package, validate, initial_platform='xbox360'):
     import tkinter as tk
     from tkinter import ttk, filedialog as fd, messagebox as mb, font as tkfont
 
@@ -121,10 +122,21 @@ def launch(analyze, package, validate):
     selected_source = None
     assets = []
     game_root = tk.StringVar()
+    platform = tk.StringVar(value=initial_platform)
+    rpcs3_path = tk.StringVar()
     confirmed = tk.BooleanVar()
     busy = False
     jobs = Queue()
     busy_controls = []
+    poll_job = None
+
+    def stop_poll(event):
+        nonlocal poll_job
+        if event.widget == app and poll_job is not None:
+            app.after_cancel(poll_job)
+            poll_job = None
+
+    app.bind('<Destroy>', stop_poll, add='+')
 
     top = tk.Frame(page, bg=BG)
     top.pack(fill='x')
@@ -133,6 +145,75 @@ def launch(analyze, package, validate):
     label(page, 'Bring your mod over.', size=30, bold=True).pack(anchor='w', pady=(20, 4))
     label(page, 'Choose a 2K26 file. We’ll check what it needs for WWE 2K14.',
           color=MUTED, wraplength=650).pack(anchor='w', pady=(0, 22))
+
+    modes = tk.Frame(page, bg=BG)
+    modes.pack(fill='x', pady=(0, 14))
+
+    def select_platform(value):
+        if value != platform.get():
+            platform.set(value)
+            game_root.set('')
+            assets.clear()
+            asset_list.delete(0, 'end')
+            confirmed.set(False)
+        ps3 = value == 'ps3'
+        for mode, control in [('xbox360', pc_mode), ('ps3', ps3_mode)]:
+            control.configure(bg=ACCENT if value == mode else BORDER, fg=INK if value == mode else TEXT)
+        confirmation.configure(text='These assets were rebuilt for WWE 2K14 ' + ('PS3.' if ps3 else 'Xbox 360.'))
+        output_note.configure(text=('PS3 ZIPs install into USRDIR of a separate test copy. Use RPCS3 to play.' if ps3
+                                   else 'ZIP packaging checks files and paths. Import in the PC launcher’s Mods tab.'))
+        game_button.configure(text='Choose PS3 reference folder' if ps3 else 'Choose 2K14 reference folder')
+        if ps3:
+            runtime_card.pack(fill='x', pady=(0, 14), before=source_card)
+        else:
+            runtime_card.pack_forget()
+        update_export_state()
+
+    pc_mode = button(modes, 'PC / Xbox 360', lambda: select_platform('xbox360'))
+    pc_mode.pack(side='left')
+    ps3_mode = button(modes, 'PS3 / RPCS3', lambda: select_platform('ps3'))
+    ps3_mode.pack(side='left', padx=8)
+    busy_controls.extend([pc_mode, ps3_mode])
+
+    runtime_card = card(page)
+    label(runtime_card, 'PLAYSTATION 3', size=9, color=ACCENT, bold=True).pack(anchor='w')
+    label(runtime_card, 'Play through RPCS3', size=18, bold=True).pack(anchor='w', pady=(8, 4))
+    label(runtime_card, 'The PC recompilation uses Xbox 360 code. Your PS3 copy boots separately in RPCS3.',
+          color=MUTED, wraplength=650).pack(anchor='w')
+    runtime_actions = tk.Frame(runtime_card, bg=CARD)
+    runtime_actions.pack(fill='x', pady=(12, 0))
+    ps3_game_button = button(runtime_actions, 'Choose PS3 game', lambda: choose_game())
+    ps3_game_button.pack(side='left')
+
+    def choose_rpcs3():
+        name = fd.askopenfilename(title='Choose your installed rpcs3.exe / RPCS3 executable',
+                                  filetypes=[('RPCS3', 'rpcs3.exe rpcs3 *.AppImage'), ('All files', '*')])
+        if name:
+            rpcs3_path.set(name)
+
+    emulator_button = button(runtime_actions, 'Choose RPCS3', choose_rpcs3)
+    emulator_button.pack(side='left', padx=8)
+
+    def play_ps3():
+        if not game_root.get() or not rpcs3_path.get():
+            return mb.showinfo('Set up RPCS3 first', 'Choose your extracted PS3 game and installed RPCS3 executable.\n'
+                              'Install official PS3 firmware in RPCS3 and verify your game dump there first.')
+
+        def started(process):
+            status_title.configure(text='RPCS3 started', fg=ACCENT)
+            status_text.configure(text='Check the RPCS3 window for boot progress or setup errors. The game has not been verified here.')
+            stats.configure(text='External emulator launched / gameplay not tested')
+        game = game_root.get()
+        emulator = rpcs3_path.get()
+        run_task(lambda: launch_ps3(game, emulator), started)
+
+    play_button = button(runtime_actions, 'Play in RPCS3', play_ps3, primary=True)
+    play_button.pack(side='left')
+    label(runtime_card, textvariable=game_root, color=MUTED, wraplength=650).pack(anchor='w', pady=(8, 0))
+    label(runtime_card, textvariable=rpcs3_path, color=MUTED, wraplength=650).pack(anchor='w')
+    label(runtime_card, 'Use an extracted PS3 disc folder with PS3_GAME/USRDIR/EBOOT.BIN. Firmware and RPCS3 are installed separately.',
+          size=9, color=MUTED, wraplength=650).pack(anchor='w', pady=(8, 0))
+    busy_controls.extend([ps3_game_button, emulator_button, play_button])
 
     source_card = card(page)
     source_card.pack(fill='x')
@@ -180,11 +261,12 @@ def launch(analyze, package, validate):
         Thread(target=worker, daemon=True).start()
 
     def poll():
-        nonlocal busy
+        nonlocal busy, poll_job
+        poll_job = None
         try:
             done, result, error = jobs.get_nowait()
         except Empty:
-            app.after(80, poll)
+            poll_job = app.after(80, poll)
             return
         busy = False
         progress.stop()
@@ -201,7 +283,7 @@ def launch(analyze, package, validate):
                 status_title.configure(text='Could not finish', fg=AMBER)
                 status_text.configure(text=str(ex))
         update_export_state()
-        app.after(80, poll)
+        poll_job = app.after(80, poll)
 
     def load_source(path, display_name=None):
         nonlocal selected_source, report
@@ -283,13 +365,21 @@ def launch(analyze, package, validate):
     setup_toggle.pack(anchor='w', pady=(12, 0))
 
     def choose_game():
-        name = fd.askdirectory(title='Choose extracted Xbox 360 2K14 game folder containing pac')
+        name = fd.askdirectory(title='Choose extracted 2K14 game folder (PS3 disc, PS3_GAME, USRDIR, or Xbox 360)')
         if name:
-            game_root.set(name)
-            assets.clear()
-            asset_list.delete(0, 'end')
-            confirmed.set(False)
-            update_export_state()
+            try:
+                try:
+                    layout = game_layout(name, 'auto')
+                except ValueError:
+                    layout = game_layout(name, platform.get())
+                select_platform(layout.platform)
+                game_root.set(str(layout.asset_root))
+                assets.clear()
+                asset_list.delete(0, 'end')
+                confirmed.set(False)
+                update_export_state()
+            except Exception as ex:
+                mb.showerror('Cannot use game folder', str(ex))
 
     game_button = button(setup, 'Choose 2K14 reference folder', choose_game)
     game_button.pack(anchor='w')
@@ -306,7 +396,7 @@ def launch(analyze, package, validate):
             return
         try:
             relative = Path(target).resolve().relative_to(Path(game_root.get()).resolve()).as_posix()
-            entry = validate(game_root.get(), replacement, relative)
+            entry = validate(game_root.get(), replacement, relative, platform.get())
             if any(old.casefold() == entry[1].casefold() for _, old in assets):
                 raise ValueError('This target already has a replacement.')
             assets.append(entry)
@@ -342,22 +432,25 @@ def launch(analyze, package, validate):
         if busy or not assets or not confirmed.get():
             return
         name = fd.asksaveasfilename(title='Save 2K14 mod package', defaultextension='.zip',
-                                   initialfile='My_2K14_Mod.zip')
+                                   initialfile='My_2K14_PS3_Mod.zip' if platform.get() == 'ps3' else 'My_2K14_Mod.zip')
         if not name:
             return
         export_assets = list(assets)
         export_root = game_root.get()
+        export_platform = platform.get()
 
         def exported(test_path):
             status_title.configure(text='Package + test JSON saved', fg=ACCENT)
-            status_text.configure(text=f'{Path(name).name}\n{test_path.name}\nImport the ZIP in the 2K14 launcher’s Mods tab.')
+            installation = ('Extract into USRDIR of a separate PS3 test copy, then boot that copy in RPCS3.'
+                            if export_platform == 'ps3' else 'Import the ZIP in the 2K14 launcher’s Mods tab.')
+            status_text.configure(text=f'{Path(name).name}\n{test_path.name}\n{installation}')
             stats.configure(text='Packaging passed   /   In-game compatibility: not tested')
-        run_task(lambda: package(export_root, export_assets, name, True), exported)
+        run_task(lambda: package(export_root, export_assets, name, True, export_platform), exported)
 
     export_button = button(export_card, 'Export 2K14 ZIP + test JSON  →', export, primary=True, state='disabled')
     export_button.pack(fill='x', pady=(18, 0))
-    label(export_card, 'ZIP packaging checks files and paths. Test the rebuilt wrestler in-game.',
-          size=9, color=MUTED, wraplength=650).pack(anchor='w', pady=(8, 0))
+    output_note = label(export_card, '', size=9, color=MUTED, wraplength=650)
+    output_note.pack(anchor='w', pady=(8, 0))
 
     footer = tk.Frame(page, bg=BG)
     footer.pack(fill='x', pady=(18, 0))
@@ -392,6 +485,6 @@ def launch(analyze, package, validate):
     button(footer, 'Save analysis JSON', save_report).pack(side='left', padx=8)
     label(page, 'Jeff Hardy source: JeffIsMyName2K • Original source archive included.',
           size=9, color=MUTED, wraplength=650).pack(anchor='w', pady=(16, 0))
-    update_export_state()
-    app.after(80, poll)
+    select_platform(initial_platform)
+    poll_job = app.after(80, poll)
     app.mainloop()

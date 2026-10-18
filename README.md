@@ -2,6 +2,8 @@
 
 Windows-friendly source analysis and ZIP packaging for the Banshee WWE 2K14 PC launcher's Mods tab. Python 3.10+; no third-party packages.
 
+Also includes a **PS3 / RPCS3** mode for extracted PS3 game references, PS3 mod packaging, and an external RPCS3 launch button. The native PC launcher in the uploaded release still requires Xbox 360 game files. This tool does not modify that executable or turn a PS3 game into an Xbox 360 game.
+
 **This is not an automatic 2K26-to-2K14 converter.** It does not extract CAK archives, retarget models or animations, convert textures, or rebuild PACs. Renaming a file does not convert it. Export validates paths and packaging, not binary compatibility.
 
 ## Run on Windows
@@ -10,9 +12,37 @@ Windows-friendly source analysis and ZIP packaging for the Banshee WWE 2K14 PC l
 2. Install Python 3.10 or newer from https://www.python.org/downloads/windows/ with Tcl/Tk and the Python launcher (included in the normal installer).
 3. Double-click **Launch Formatter.bat**. Alternatively, open PowerShell in that folder and run `py -3 mod_formatter.py`.
 
+## Use your PS3 game
+
+1. Install [RPCS3](https://rpcs3.net/download). Follow its [quickstart](https://rpcs3.net/quickstart), including installing official PS3 firmware. Use your own valid game dump and first verify it boots directly in RPCS3. RPCS3, firmware and game files are not bundled here.
+2. Extract your PS3 disc dump. The supported folder layout is:
+
+   ```text
+   WWE 2K14 PS3/
+     PS3_GAME/
+       USRDIR/
+         EBOOT.BIN
+         pac/
+         ...other game files...
+   ```
+
+3. Double-click **Launch PS3.bat**, or choose **PS3 / RPCS3** in the formatter.
+4. Click **Choose PS3 game** and select the disc folder, `PS3_GAME`, or `USRDIR`. The formatter detects PS3 and uses `USRDIR` as the asset reference folder. ISO, PKG and compressed game files must be prepared separately with RPCS3-supported tools; selecting an ISO is not supported here.
+5. Click **Choose RPCS3**, select your installed `rpcs3.exe`, then click **Play in RPCS3**. This passes the game's `EBOOT.BIN` to the external emulator. Starting the process does not establish that the game booted successfully; inspect RPCS3's window for errors.
+
+The screenshot's **No default.xex in this folder** message comes from the Xbox 360-only recompilation. PS3 uses `EBOOT.BIN`; renaming it to `default.xex` will not work. Use the formatter's RPCS3 launch route for your PS3 game. The recompilation's graphics options, achievements and mod staging do not apply to the external emulator.
+
+### PS3 mods
+
+Select **PS3 / RPCS3**, choose the extracted PS3 reference, and add assets rebuilt specifically for **WWE 2K14 PS3**. The original PS3 target files must exist. Xbox 360 PACs and 2K26 models are not automatically converted. Existing PS3 `.arc` and `.def` catalogs at the `USRDIR` root can also be included if your asset tool rebuilt them. The formatter does not rebuild catalogs itself.
+
+Exports contain paths relative to `USRDIR`, e.g. `pac/ch/<original-name>.pac`. Extract the mod ZIP into `PS3_GAME/USRDIR` of a **separate test copy** of the complete game, keeping the original backed up. Select that test copy under **Choose PS3 game** and boot it through RPCS3. Do not import PS3 asset ZIPs into the native PC launcher's Mods tab. The formatter never automatically installs or overwrites game assets.
+
+The `.test.json` records `target_platform: "ps3"`, installation instructions, packaging checks and a separate `rpcs3_boot` checklist item. Compatibility and in-game tests remain `not_tested` until performed. Game-region and title-update differences may require matching rebuilt assets.
+
 ## Simplified desktop UI
 
-Click **Choose 2K26 file**. The app checks it automatically in the background, without freezing the window. **Choose folder** handles already extracted source files. **Jeff Hardy 26 A0** opens the included source in one click. The dark interface keeps file details and converted-asset setup out of the main selection flow and scrolls on smaller screens.
+Choose **PC / Xbox 360** or **PS3 / RPCS3**. Click **Choose 2K26 file**. The app checks it automatically in the background, without freezing the window. **Choose folder** handles already extracted source files. **Jeff Hardy 26 A0** opens the included source in one click. The dark interface keeps file details and converted-asset setup out of the main selection flow and scrolls on smaller screens.
 
 Source inspection is automatic; binary conversion is not implemented. The source status shows **Conversion required**. To package assets you have already rebuilt, expand **I have converted assets**, choose the extracted 2K14 reference folder, add replacements against original target files, and confirm their format. **Export 2K14 ZIP + test JSON** then becomes available. It remains disabled for an unconverted 2K26 source.
 
@@ -44,7 +74,7 @@ My_Attire_Mod.zip
       <actual-original-filename>.pac
 ```
 
-Only original paths under `pac/`, `movies/`, and `sound/` are supported. This tool handles replacements, not new roster slots. It does not modify original game files or launcher manifests, start the game, or modify Gorilla. No automatic conflict scan, conversion or rollback is included. Existing output packages are not overwritten.
+Only original paths under `pac/`, `movies/`, and `sound/` are supported; PS3 mode also accepts original root `.arc`/`.def` catalogs. This tool handles replacements, not new roster slots. It does not modify original game files or launcher manifests, or modify Gorilla. Game launch is external through RPCS3 in PS3 mode. No automatic conflict scan, conversion or rollback is included. Existing output packages are not overwritten.
 
 ## Test JSON after export
 
@@ -54,11 +84,16 @@ The JSON records the export timestamp, package and asset SHA-256 hashes, file si
 
 `conversion.status` is `user_declared`; the tool has not verified the binary conversion. `binary_compatibility.status` and `in_game.status` start as `not_tested`. After testing in 2K14, you can edit the in-game checklist and notes to record actual results (`passed`, `failed`, or `not_tested`) for launcher import, wrestler selection, entrance, attire/textures, match gameplay, and victory. Do not treat a packaging pass as proof that the port works.
 
+Schema version 2 adds `target_platform`, `runtime`, installation instructions and platform-specific in-game checks. Xbox 360 remains the default export target for existing CLI commands.
+
 ## CLI
 
 ```powershell
 py -3 mod_formatter.py analyze "C:\Downloads\My2K26Mod.zip" --report report.json
 py -3 mod_formatter.py pack --game-root "C:\Games\WWE2K14-Extracted" --asset "C:\Converted\chXXX.pac=pac/ch/chXXX.pac" --output "C:\Mods\My_Attire_Mod.zip" --confirm-2k14
+py -3 mod_formatter.py --ps3
+py -3 mod_formatter.py play-ps3 --game-root "C:\Games\WWE2K14-PS3" --rpcs3 "C:\Emulators\RPCS3\rpcs3.exe"
+py -3 mod_formatter.py pack --platform ps3 --game-root "C:\Games\WWE2K14-PS3" --asset "C:\Converted-PS3\chXXX.pac=pac/ch/chXXX.pac" --output "C:\Mods\My_PS3_Mod.zip" --confirm-2k14
 ```
 
 Replace example paths with actual ones. Input analysis is heuristic. Limits: 20,000 input files or 2 GiB declared uncompressed input; 2 GiB output assets. GUI requires Tk and a desktop. The desktop file picker, source status, converted-asset export and JSON flow were exercised with real Tk on a virtual Linux display, using synthetic PAC fixtures for export. Windows GUI and in-game behavior have not been validated.
@@ -67,4 +102,7 @@ Replace example paths with actual ones. Input analysis is heuristic. Limits: 20,
 
 ```sh
 python -m unittest discover -s tests -v
+python tools/check_desktop.py
 ```
+
+The desktop check requires a display (or Xvfb on Linux). It exercises source selection, both platform modes, converted-asset export and test JSON. RPCS3 process creation is mocked; no emulator or real game is run. Actual PS3 gameplay and real converted assets have not been validated here.
